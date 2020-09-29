@@ -130,13 +130,6 @@ describe('CToken', function () {
       ).rejects.toRevert("revert token seizure failed");
     });
 
-    it("reverts if liquidateBorrowVerify fails", async() => {
-      await send(cToken.comptroller, 'setLiquidateBorrowVerify', [false]);
-      await expect(
-        liquidateFresh(cToken, liquidator, borrower, repayAmount, cTokenCollateral)
-      ).rejects.toRevert("revert liquidateBorrowVerify rejected liquidateBorrow");
-    });
-
     it("transfers the cash, borrows, tokens, and emits Transfer, LiquidateBorrow events", async () => {
       const beforeBalances = await getBalances([cToken, cTokenCollateral], [liquidator, borrower]);
       const result = await liquidateFresh(cToken, liquidator, borrower, repayAmount, cTokenCollateral);

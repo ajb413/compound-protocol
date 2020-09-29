@@ -117,11 +117,6 @@ describe('CEther', function () {
       await expect(borrowFresh(cToken, borrower, borrowAmount)).rejects.toRevert("revert TOKEN_TRANSFER_OUT_FAILED");
     });
 
-    it("reverts if borrowVerify fails", async() => {
-      await send(cToken.comptroller, 'setBorrowVerify', [false]);
-      await expect(borrowFresh(cToken, borrower, borrowAmount)).rejects.toRevert("revert borrowVerify rejected borrow");
-    });
-
     it("transfers the underlying cash, tokens, and emits Borrow event", async () => {
       const beforeBalances = await getBalances([cToken], [borrower]);
       const beforeProtocolBorrows = await totalBorrows(cToken);
@@ -219,11 +214,6 @@ describe('CEther', function () {
           await expect(
             send(cToken, 'harnessRepayBorrowFresh', [payer, borrower, repayAmount], {from: payer, value: 1})
           ).rejects.toRevert("revert value mismatch");
-        });
-
-        it("reverts if repayBorrowVerify fails", async() => {
-          await send(cToken.comptroller, 'setRepayBorrowVerify', [false]);
-          await expect(repayBorrowFresh(cToken, payer, borrower, repayAmount)).rejects.toRevert("revert repayBorrowVerify rejected repayBorrow");
         });
 
         it("transfers the underlying cash, and emits RepayBorrow event", async () => {

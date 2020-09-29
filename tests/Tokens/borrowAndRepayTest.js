@@ -118,11 +118,6 @@ describe('CToken', function () {
       await expect(borrowFresh(cToken, borrower, borrowAmount)).rejects.toRevert("revert TOKEN_TRANSFER_OUT_FAILED");
     });
 
-    it("reverts if borrowVerify fails", async() => {
-      await send(cToken.comptroller, 'setBorrowVerify', [false]);
-      await expect(borrowFresh(cToken, borrower, borrowAmount)).rejects.toRevert("revert borrowVerify rejected borrow");
-    });
-
     it("transfers the underlying cash, tokens, and emits Transfer, Borrow events", async () => {
       const beforeProtocolCash = await balanceOf(cToken.underlying, cToken._address);
       const beforeProtocolBorrows = await totalBorrows(cToken);
@@ -221,11 +216,6 @@ describe('CToken', function () {
         it("reverts if doTransferIn fails", async () => {
           await send(cToken.underlying, 'harnessSetFailTransferFromAddress', [payer, true]);
           await expect(repayBorrowFresh(cToken, payer, borrower, repayAmount)).rejects.toRevert("revert TOKEN_TRANSFER_IN_FAILED");
-        });
-
-        it("reverts if repayBorrowVerify fails", async() => {
-          await send(cToken.comptroller, 'setRepayBorrowVerify', [false]);
-          await expect(repayBorrowFresh(cToken, payer, borrower, repayAmount)).rejects.toRevert("revert repayBorrowVerify rejected repayBorrow");
         });
 
         it("transfers the underlying cash, and emits Transfer, RepayBorrow events", async () => {
